@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>How,</title>
+  <title>How</title>
   <style>
     body {
       margin: 0;
@@ -14,19 +14,12 @@
       height: 100vh;
       overflow: hidden;
     }
-    .container {
-      flex: 1;
-      max-width: 800px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      padding: 20px;
-    }
     .header {
       text-align: center;
       padding: 20px 0;
       background: #fff;
       border-bottom: 1px solid #e0e0e0;
+      width: 100%;
     }
     h1 {
       margin: 0;
@@ -36,18 +29,18 @@
     #chat-box {
       flex: 1;
       background: #fff;
-      border: 1px solid #e0e0e0;
-      border-radius: 8px;
+      width: 100vw;
+      height: calc(100vh - 80px - 100px); /* Header: ~80px, Input: ~100px */
       overflow-y: auto;
       padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      box-sizing: border-box;
     }
     .message {
-      margin: 10px 0;
-      padding: 10px 15px;
-      border-radius: 8px;
+      margin: 15px 20px;
+      padding: 12px 18px;
+      border-radius: 12px;
       max-width: 80%;
+      font-size: 16px;
     }
     .user {
       background: #4fc3f7;
@@ -61,38 +54,45 @@
       margin-right: auto;
     }
     .input-container {
+      position: fixed;
+      bottom: 20px;
+      width: 100%;
       display: flex;
-      gap: 15px;
-      padding: 0 20px;
       justify-content: center;
       align-items: center;
+      box-sizing: border-box;
     }
     #input-box {
-      flex: 1;
-      max-width: 90%;
-      height: 120px;
-      padding: 20px;
-      border: 1px solid #ccc;
-      border-radius: 20px;
-      font-size: 20px;
+      width: 80%;
+      height: 60px;
+      padding: 15px 50px 15px 15px; /* Extra right padding for button */
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      font-size: 18px;
+      font-family: Verdana, sans-serif;
       resize: none;
-      margin: 0 auto;
+      box-sizing: border-box;
+      background: #fff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      position: relative;
     }
     #input-box:focus {
       outline: none;
       border-color: #4fc3f7;
-      box-shadow: 0 0 5px rgba(79, 195, 247, 0.3);
+      box-shadow: 0 4px 12px rgba(79, 195, 247, 0.3);
     }
     #send-button {
-      padding: 10px;
-      width: 50px;
-      height: 50px;
+      position: absolute;
+      right: 10px;
+      bottom: 12px;
+      width: 36px;
+      height: 36px;
       background: #4fc3f7;
       color: #fff;
       border: none;
       border-radius: 50%;
       cursor: pointer;
-      font-size: 16px;
+      font-size: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -101,40 +101,31 @@
       background: #29b6f6;
     }
     @media (max-width: 600px) {
-      .container {
-        padding: 10px;
-      }
       h1 {
         font-size: 20px;
       }
       #chat-box {
-        margin-bottom: 10px;
+        padding: 10px;
       }
-      .input-container {
-        flex-direction: column;
-        gap: 10px;
-      }
-      #send-button {
-        width: 100%;
-        border-radius: 5px;
+      .message {
+        font-size: 14px;
+        margin: 10px 15px;
       }
       #input-box {
-        max-width: 100%;
-        height: 100px;
+        width: 90%;
+        font-size: 16px;
       }
     }
   </style>
 </head>
 <body>
   <div class="header">
-    <h1>How,</h1>
+    <h1>How</h1>
   </div>
-  <div class="container">
-    <div id="chat-box"></div>
-    <div class="input-container">
-      <textarea id="input-box" rows="5" placeholder="Type your message..."></textarea>
-      <button id="send-button" onclick="sendMessage()">Send</button>
-    </div>
+  <div id="chat-box"></div>
+  <div class="input-container">
+    <textarea id="input-box" rows="2" placeholder="type your how..."></textarea>
+    <button id="send-button" onclick="sendMessage()">Send</button>
   </div>
   <script>
     const chatBox = document.getElementById('chat-box');
@@ -176,7 +167,8 @@
             message: userInput,
             model: 'command-r',
             max_tokens: 200,
-            temperature: 0.7
+            temperature: 0.7,
+            system: 'You are a confident, playful chatbot with an Asian-inspired personality, like a witty K-drama character or anime sidekick. Use informal, direct language with a touch of sass. Include the phrase "Are you Dumb?" naturally when the user’s input is unclear, silly, or needs correction. Keep responses concise and fun.'
           })
         });
 
@@ -188,7 +180,7 @@
         const botResponse = data.text;
         addMessage(botResponse, 'bot');
       } catch (error) {
-        addMessage(`Error: Could not connect to Cohere API. (${error.message})`, 'bot');
+        addMessage(`Error: Could not connect to Cohere API. Are you Dumb? Check your connection! (${error.message})`, 'bot');
       }
     }
 
